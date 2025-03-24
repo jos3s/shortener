@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
 import { ShorteningService } from 'src/url-shortener/utils/shortening.service';
 import { UrlShortener } from './entities/url-shortener.entity';
@@ -71,6 +76,22 @@ export class UrlShortenerService {
       await this.urlShortenerRepository.save(urlShortener);
     } else {
       throw new NotFoundException();
+    }
+  }
+
+  async redirect(link: string) {
+    const urlShortener = await this.urlShortenerRepository.findOneBy({
+      shortenerLink: link,
+    });
+
+    if (urlShortener != null) {
+      urlShortener.accessCounter++;
+
+      await this.urlShortenerRepository.save(urlShortener);
+
+      return urlShortener.url;
+    } else {
+      throw new BadRequestException();
     }
   }
 }

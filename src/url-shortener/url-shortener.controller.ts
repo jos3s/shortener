@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   Res,
+  Redirect,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UrlShortenerService } from './url-shortener.service';
@@ -17,7 +18,7 @@ import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 import { Public } from 'src/auth/utils/public';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('shortener')
+@Controller()
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) {}
 
@@ -35,7 +36,7 @@ export class UrlShortenerController {
 
     const response = new UrlShortenerResponseDto(
       shortenerUrl.id,
-      `${req.protocol}://${req.get('Host')}/r/${shortenerUrl.shortenerLink}`,
+      `${req.protocol}://${req.get('Host')}/${shortenerUrl.shortenerLink}`,
       shortenerUrl.createdAt,
       shortenerUrl.updatedAt,
     );
@@ -45,7 +46,7 @@ export class UrlShortenerController {
   @Get('all')
   @ApiBearerAuth()
   async findAll(@Req() req: Request) {
-    const defaultUrl = `${req.protocol}://${req.get('Host')}/r`;
+    const defaultUrl = `${req.protocol}://${req.get('Host')}`;
 
     const urls = await this.urlShortenerService.findAllByUserId(1);
 
@@ -84,5 +85,12 @@ export class UrlShortenerController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     await this.urlShortenerService.remove(id, req['user']?.sub);
     return response.status(204);
+  }
+
+  @Get('/:path')
+  @Public()
+  @Redirect()
+  async redirect(@Req() request: Request, @Param('path') path: string) {
+    return { url: await this.urlShortenerService.redirect(path) };
   }
 }
