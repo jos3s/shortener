@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
-import { UrlShorteningService } from 'src/url-sortening/url-sortening.service';
+import { ShorteningService } from 'src/url-shortener/utils/shortening.service';
 import { UrlShortener } from './entities/url-shortener.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
