@@ -5,6 +5,7 @@ import { UrlShortener } from './entities/url-shortener.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
+import { User } from 'src/users/entities/user.entity';
 // import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 
 @Injectable()
@@ -19,12 +20,13 @@ export class UrlShortenerService {
   async create(createUrlShortenerDto: CreateUrlShortenerDto, userId: number) {
     const shortenerUrl = await this.urlShorteningService.generateUniqueCode();
 
-    const user = await this.usersService.findOneById(userId);
+    let user: User | null = null;
+    if (userId != null) user = await this.usersService.findOneById(userId);
 
     const url: UrlShortener = new UrlShortener(
       createUrlShortenerDto.url,
       shortenerUrl,
-      user!,
+      user ?? undefined,
     );
 
     await this.urlShortenerRepository.save(url);
@@ -38,9 +40,11 @@ export class UrlShortenerService {
     });
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} urlShortener`;
-  // }
+  async findOne(id: number) {
+    return await this.urlShortenerRepository.findOneBy({
+      id: id,
+    });
+  }
 
   async update(id: number, updateUrlShortenerDto: UpdateUrlShortenerDto) {
     const urlShortener = await this.urlShortenerRepository.findOneBy({
@@ -50,18 +54,16 @@ export class UrlShortenerService {
     if (urlShortener != null) {
       urlShortener.url = updateUrlShortenerDto.url;
 
-      urlShortener.shortenerLink =
-        await this.urlShorteningService.generateUniqueCode();
-
       await this.urlShortenerRepository.save(urlShortener);
     } else {
       throw new NotFoundException();
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number, userId: number) {
     const urlShortener = await this.urlShortenerRepository.findOneBy({
       id: id,
+      user: { id: userId },
     });
 
     if (urlShortener != null) {
