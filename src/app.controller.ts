@@ -7,7 +7,7 @@ export class AppController {
 
   @Get('r/:path')
   @Redirect()
-  async getHello(@Req() request: Request, @Param('path') path: string) {
-    return this.appService.redirect(path);
+  async redirect(@Req() request: Request, @Param('path') path: string) {
+    return { url: await this.appService.redirect(path) };
   }
 }

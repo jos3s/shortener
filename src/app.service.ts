@@ -1,5 +1,4 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import path from 'path';
 import { Repository } from 'typeorm';
 import { UrlShortener } from './url-shortener/entities/url-shortener.entity';
 
