@@ -1,8 +1,10 @@
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,6 +23,9 @@ export class UrlShortener {
   @Column()
   accessCounter: number = 0;
 
+  @ManyToOne(() => User, (user) => user.urlShorteners)
+  user?: User;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -30,8 +35,9 @@ export class UrlShortener {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  constructor(url: string, shortener: string) {
+  constructor(url: string, shortener: string, user?: User) {
     this.url = url;
     this.shortenerLink = shortener;
+    this.user = user;
   }
 }
