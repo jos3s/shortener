@@ -35,6 +35,12 @@ export class UsersService {
     });
   }
 
+  async findOneById(id: number) {
+    return await this.usersRepository.findOneBy({
+      id: id,
+    });
+  }
+
   // // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // update(id: number, updateUserDto: UpdateUserDto) {
   //   return `This action updates a #${id} user`;
