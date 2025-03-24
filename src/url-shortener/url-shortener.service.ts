@@ -4,6 +4,7 @@ import { UrlShorteningService } from 'src/url-sortening/url-sortening.service';
 import { UrlShortener } from './entities/url-shortener.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
+import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 // import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 
 @Injectable()
@@ -41,9 +42,22 @@ export class UrlShortenerService {
   //   return `This action returns a #${id} urlShortener`;
   // }
 
-  // update(id: number, updateUrlShortenerDto: UpdateUrlShortenerDto) {
-  //   return `This action updates a #${id} urlShortener`;
-  // }
+  async update(id: number, updateUrlShortenerDto: UpdateUrlShortenerDto) {
+    const urlShortener = await this.urlShortenerRepository.findOneBy({
+      id: id,
+    });
+
+    if (urlShortener != null) {
+      urlShortener.url = updateUrlShortenerDto.url;
+
+      urlShortener.shortenerLink =
+        await this.urlShorteningService.generateUniqueCode();
+
+      await this.urlShortenerRepository.save(urlShortener);
+    } else {
+      throw new NotFoundException();
+    }
+  }
 
   async remove(id: number) {
     const urlShortener = await this.urlShortenerRepository.findOneBy({

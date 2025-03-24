@@ -43,13 +43,13 @@ export class UrlShortenerController {
   //   return this.urlShortenerService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateUrlShortenerDto: UpdateUrlShortenerDto,
-  // ) {
-  //   return this.urlShortenerService.update(+id, updateUrlShortenerDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: number,
+    @Body() updateUrlShortenerDto: UpdateUrlShortenerDto,
+  ) {
+    return this.urlShortenerService.update(id, updateUrlShortenerDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: number) {
