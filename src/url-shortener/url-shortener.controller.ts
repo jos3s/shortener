@@ -14,19 +14,23 @@ import { UrlShortenerService } from './url-shortener.service';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
 import { UrlShortenerResponseDto } from './dto/url-shortener.response.dto';
 import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
+import { Public } from 'src/auth/utils/public';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('shortener')
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) {}
 
   @Post()
+  @Public()
   async create(
     @Req() req: Request,
     @Body() createUrlShortenerDto: CreateUrlShortenerDto,
   ) {
     const shortenerUrl = await this.urlShortenerService.create(
       createUrlShortenerDto,
-      1,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      req['user']?.sub,
     );
 
     const response = new UrlShortenerResponseDto(
@@ -38,9 +42,10 @@ export class UrlShortenerController {
     return response;
   }
 
-  @Get()
+  @Get('all')
+  @ApiBearerAuth()
   async findAll(@Req() req: Request) {
-    const defaultUrl = `${req.protocol}://${req.get('Host')}/r/`;
+    const defaultUrl = `${req.protocol}://${req.get('Host')}/r`;
 
     const urls = await this.urlShortenerService.findAllByUserId(1);
 
@@ -61,6 +66,7 @@ export class UrlShortenerController {
   // }
 
   @Patch(':id')
+  @ApiBearerAuth()
   update(
     @Param('id') id: number,
     @Body() updateUrlShortenerDto: UpdateUrlShortenerDto,
@@ -69,8 +75,14 @@ export class UrlShortenerController {
   }
 
   @Delete(':id')
-  async remove(@Res() response: Response, @Param('id') id: number) {
-    await this.urlShortenerService.remove(id);
+  @ApiBearerAuth()
+  async remove(
+    @Res() req: Request,
+    @Res() response: Response,
+    @Param('id') id: number,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    await this.urlShortenerService.remove(id, req['user']?.sub);
     return response.status(204);
   }
 }
