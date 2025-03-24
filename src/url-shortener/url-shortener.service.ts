@@ -12,12 +12,11 @@ export class UrlShortenerService {
     @Inject('URLSHORTENER_REPOSITORY')
     private urlShortenerRepository: Repository<UrlShortener>,
     private usersService: UsersService,
+    private urlShorteningService: ShorteningService,
   ) {}
 
   async create(createUrlShortenerDto: CreateUrlShortenerDto, userId: number) {
-    const shortenerUrl = await new UrlShorteningService(
-      this.urlShortenerRepository,
-    ).generateUniqueCode();
+    const shortenerUrl = await this.urlShorteningService.generateUniqueCode();
 
     const user = await this.usersService.findOneById(userId);
 
