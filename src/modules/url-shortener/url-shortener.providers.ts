@@ -1,5 +1,5 @@
+import { UrlShortener } from 'src/core/entities/url-shortener.entity';
 import { DataSource } from 'typeorm';
-import { UrlShortener } from './entities/url-shortener.entity';
 
 export const urlShortenerProviders = [
   {

@@ -4,13 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
-import { ShorteningService } from 'src/url-shortener/utils/shortening.service';
-import { UrlShortener } from './entities/url-shortener.entity';
 import { Repository } from 'typeorm';
-import { UsersService } from 'src/users/users.service';
-import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
-import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/modules/users/users.service';
+import { User } from 'src/core/entities/user.entity';
+import { CreateUrlShortenerDto } from 'src/core/dtos/url-shortener/create-url-shortener.dto';
+import { UpdateUrlShortenerDto } from 'src/core/dtos/url-shortener/update-url-shortener.dto';
+import { UrlShortener } from 'src/core/entities/url-shortener.entity';
+import { ShorteningService } from './utils/shortening.service';
 // import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 
 @Injectable()
