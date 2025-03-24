@@ -4,14 +4,16 @@ import {
   Post,
   Body,
   Req,
-  // Patch,
+  Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { UrlShortenerService } from './url-shortener.service';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
-import { CreateUrlShortenerResponseDto } from './dto/create-url-shortener.respose.dto';
+import { UrlShortenerResponseDto } from './dto/url-shortener.response.dto';
+import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 
 @Controller('shortener')
 export class UrlShortenerController {
@@ -27,15 +29,30 @@ export class UrlShortenerController {
       1,
     );
 
-    const response = new CreateUrlShortenerResponseDto(
-      `${req.protocol}://${req.get('Host')}/${shortenerUrl.shortenerLink}`,
+    const response = new UrlShortenerResponseDto(
+      shortenerUrl.id,
+      `${req.protocol}://${req.get('Host')}/r/${shortenerUrl.shortenerLink}`,
+      shortenerUrl.createdAt,
+      shortenerUrl.updatedAt,
     );
     return response;
   }
 
   @Get()
-  async findAll() {
-    return this.urlShortenerService.findAllByUserId(1);
+  async findAll(@Req() req: Request) {
+    const defaultUrl = `${req.protocol}://${req.get('Host')}/r/`;
+
+    const urls = await this.urlShortenerService.findAllByUserId(1);
+
+    return urls?.map(
+      (url) =>
+        new UrlShortenerResponseDto(
+          url.id,
+          `${defaultUrl}/${url.shortenerLink}`,
+          url.createdAt,
+          url.updatedAt,
+        ),
+    );
   }
 
   // @Get(':id')
@@ -52,7 +69,8 @@ export class UrlShortenerController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.urlShortenerService.remove(id);
+  async remove(@Res() response: Response, @Param('id') id: number) {
+    await this.urlShortenerService.remove(id);
+    return response.status(204);
   }
 }
