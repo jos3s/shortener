@@ -5,8 +5,8 @@ import {
   Body,
   Req,
   // Patch,
-  // Param,
-  // Delete,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UrlShortenerService } from './url-shortener.service';
@@ -24,6 +24,7 @@ export class UrlShortenerController {
   ) {
     const shortenerUrl = await this.urlShortenerService.create(
       createUrlShortenerDto,
+      1,
     );
 
     const response = new CreateUrlShortenerResponseDto(
@@ -33,8 +34,8 @@ export class UrlShortenerController {
   }
 
   @Get()
-  findAll() {
-    return this.urlShortenerService.findAll();
+  async findAll() {
+    return this.urlShortenerService.findAllByUserId(1);
   }
 
   // @Get(':id')
@@ -50,8 +51,8 @@ export class UrlShortenerController {
   //   return this.urlShortenerService.update(+id, updateUrlShortenerDto);
   // }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.urlShortenerService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.urlShortenerService.remove(id);
+  }
 }
