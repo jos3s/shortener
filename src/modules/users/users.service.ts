@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../../core/dtos/user/create-user.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -18,6 +18,10 @@ export class UsersService {
       createUserDto.password,
       this._saltRounds,
     );
+
+    if ((await this.findOne(createUserDto.email)) != null) {
+      throw new BadRequestException('Email address already in use');
+    }
 
     const user = new User(createUserDto.email, passwordHash);
 
