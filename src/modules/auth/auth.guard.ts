@@ -5,10 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './utils/public';
 import { Reflector } from '@nestjs/core';
+import { Constants } from 'src/shared/constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -29,19 +29,12 @@ export class AuthGuard implements CanActivate {
     ]);
 
     if (isPublic) {
-      try {
-        if (token != null) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const payload = await this.jwtService.verifyAsync(token, {
-            secret: jwtConstants.secret,
-          });
-          // 💡 We're assigning the payload to the request object here
-          // so that we can access it in our route handlers
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          request['user'] = payload;
+      if (token != null) {
+        try {
+          await this.getUserFromPayload(token, request);
+        } catch {
+          /* empty */
         }
-      } catch {
-        /* empty */
       }
 
       return true;
@@ -52,18 +45,22 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
-      });
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      request['user'] = payload;
+      await this.getUserFromPayload(token, request);
     } catch {
       throw new UnauthorizedException();
     }
+
     return true;
+  }
+
+  private async getUserFromPayload(token: string, request: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = await this.jwtService.verifyAsync(token, {
+      secret: Constants.jwt.secret,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    request['user'] = payload;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
