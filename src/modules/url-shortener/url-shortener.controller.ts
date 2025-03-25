@@ -45,6 +45,7 @@ export class UrlShortenerController {
     const response = new UrlShortenerResponseDto(
       shortenerUrl.id,
       `${req.protocol}://${req.get('Host')}/${shortenerUrl.shortenerLink}`,
+      shortenerUrl.url,
       shortenerUrl.createdAt,
       shortenerUrl.updatedAt,
     );
@@ -72,6 +73,7 @@ export class UrlShortenerController {
         new UrlShortenerResponseDto(
           url.id,
           `${defaultUrl}/${url.shortenerLink}`,
+          url.url,
           url.createdAt,
           url.updatedAt,
         ),
@@ -100,6 +102,7 @@ export class UrlShortenerController {
     return new UrlShortenerResponseDto(
       url.id,
       url.shortenerLink,
+      url.url,
       url.createdAt,
       url.updatedAt,
     );

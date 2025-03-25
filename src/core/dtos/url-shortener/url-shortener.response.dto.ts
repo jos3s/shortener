@@ -1,3 +1,4 @@
+import { UrlShortener } from 'src/core/entities/url-shortener.entity';
 import { ApiResponseProperty } from '@nestjs/swagger';
 
 export class UrlShortenerResponseDto {
@@ -9,7 +10,12 @@ export class UrlShortenerResponseDto {
   @ApiResponseProperty({
     type: 'string',
   })
-  link: string;
+  url: string;
+
+  @ApiResponseProperty({
+    type: 'string',
+  })
+  original_url: string;
 
   @ApiResponseProperty({
     type: 'string',
@@ -20,9 +26,16 @@ export class UrlShortenerResponseDto {
   })
   updatedAt: Date;
 
-  constructor(id: number, url: string, createdAt: Date, updatedAt: Date) {
+  constructor(
+    id: number,
+    url: string,
+    original_url: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
     this.id = id;
-    this.link = url;
+    this.url = url;
+    this.original_url = original_url;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
