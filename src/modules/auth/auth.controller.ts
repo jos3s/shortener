@@ -6,6 +6,7 @@ import { CreateUserResponseDto } from 'src/core/dtos/user/create-user.response.d
 import { UsersService } from 'src/modules/users/users.service';
 import { LoginUserDto } from 'src/core/dtos/user/login-user.dto';
 import { LoginUserResponseDto } from 'src/core/dtos/user/login-user.response.dto';
+import { ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -16,6 +17,10 @@ export class AuthController {
 
   @Post('/create')
   @Public()
+  @ApiBody({
+    type: CreateUserDto,
+    required: true,
+  })
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
 
@@ -30,6 +35,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post()
   @Public()
+  @ApiBody({
+    type: LoginUserDto,
+    required: true,
+  })
+  @ApiResponse({
+    type: LoginUserResponseDto,
+  })
   async signIn(@Body() signInDto: LoginUserDto) {
     const accessToken: string = await this.authService.signIn(signInDto);
     return new LoginUserResponseDto(signInDto.email, accessToken);

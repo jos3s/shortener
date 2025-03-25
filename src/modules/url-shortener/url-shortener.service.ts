@@ -60,6 +60,7 @@ export class UrlShortenerService {
       urlShortener.url = updateUrlShortenerDto.url;
 
       await this.urlShortenerRepository.save(urlShortener);
+      return urlShortener;
     } else {
       throw new NotFoundException();
     }

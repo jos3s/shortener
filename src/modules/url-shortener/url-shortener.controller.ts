@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UrlShortenerService } from './url-shortener.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { Public } from '../auth/utils/public';
 import { CreateUrlShortenerDto } from 'src/core/dtos/url-shortener/create-url-shortener.dto';
 import { UpdateUrlShortenerDto } from 'src/core/dtos/url-shortener/update-url-shortener.dto';
@@ -24,6 +24,14 @@ export class UrlShortenerController {
 
   @Post()
   @Public()
+  @ApiBody({
+    type: CreateUrlShortenerDto,
+    description: 'Json structure for user object',
+  })
+  @ApiResponse({
+    type: UrlShortenerResponseDto,
+    status: 201,
+  })
   async create(
     @Req() req: Request,
     @Body() createUrlShortenerDto: CreateUrlShortenerDto,
@@ -45,6 +53,12 @@ export class UrlShortenerController {
 
   @Get('all')
   @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'All url shortener by user',
+    type: UrlShortenerResponseDto,
+    isArray: true,
+  })
   async findAll(@Req() req: Request) {
     const defaultUrl = `${req.protocol}://${req.get('Host')}`;
 
@@ -68,15 +82,35 @@ export class UrlShortenerController {
 
   @Patch(':id')
   @ApiBearerAuth()
-  update(
+  @ApiResponse({
+    status: 204,
+    type: UrlShortenerResponseDto,
+  })
+  async update(
     @Param('id') id: number,
     @Body() updateUrlShortenerDto: UpdateUrlShortenerDto,
   ) {
-    return this.urlShortenerService.update(id, updateUrlShortenerDto);
+    const url = await this.urlShortenerService.update(
+      id,
+      updateUrlShortenerDto,
+    );
+    return new UrlShortenerResponseDto(
+      url.id,
+      url.shortenerLink,
+      url.createdAt,
+      url.updatedAt,
+    );
   }
 
   @Delete(':id')
   @ApiBearerAuth()
+  @ApiResponse({
+    status: 204,
+  })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 400,
+  })
   async remove(
     @Res() req: Request,
     @Res() response: Response,
