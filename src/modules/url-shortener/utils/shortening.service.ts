@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomInt } from 'node:crypto';
-import { UrlShortener } from 'src/url-shortener/entities/url-shortener.entity';
+import { UrlShortener } from 'src/core/entities/url-shortener.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

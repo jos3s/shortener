@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UrlShortenerService } from './url-shortener.service';
-import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
-import { UrlShortenerResponseDto } from './dto/url-shortener.response.dto';
-import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
-import { Public } from 'src/auth/utils/public';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Public } from '../auth/utils/public';
+import { CreateUrlShortenerDto } from 'src/core/dtos/url-shortener/create-url-shortener.dto';
+import { UpdateUrlShortenerDto } from 'src/core/dtos/url-shortener/update-url-shortener.dto';
+import { UrlShortenerResponseDto } from 'src/core/dtos/url-shortener/url-shortener.response.dto';
 
 @Controller()
 export class UrlShortenerController {

@@ -1,4 +1,4 @@
-import { UrlShortener } from 'src/url-shortener/entities/url-shortener.entity';
+import { UrlShortener } from 'src/core/entities/url-shortener.entity';
 import {
   Column,
   CreateDateColumn,
