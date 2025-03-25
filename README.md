@@ -7,6 +7,16 @@ Torne seus links mais fáceis de serem compartilhados.
 Com o Shortener você vai poder criar versões encurtadas de qualquer link sem precisar de
 contas, mas se decidir criar poderá visualizar, editar e remover os seus links encurtados.
 
+## Tecnologias
+
+* Nest.js
+  * bcrypt
+  * class-validator
+  * typeorm
+* Postgres
+* Docker
+* Jaeger
+
 ## Preparação do projeto
 
 Primeiro baixe o repositório:
@@ -21,32 +31,43 @@ Entre na pasta do projeto:
 cd shortener
 ```
 
-E rode e instale as dependências:
+E instale as dependências:
 
 ```bash
 npm install
 ```
 
-## Compile and run the project
+## Rodar o projeto localmente
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
 
-## Tecnologias
+## Rodar o projeto com docker
 
-* Nest.js
-  * bcrypt
-  * class-validator
-  * typeorm
-* Postgres
+```bash
+docker compose up --build
+```
+
+### Pontos de Acesso
+
+#### PgAdmin
+
+Subindo o projeto com o docker, acesse `http://localhost:5050/`, entre com `admin@admin.com` e `pgadmin4`.
+
+Configure um novo servidor, com:
+
+* Host name/address: db
+* Port: 5432
+* Maintenance database: postgres
+* Username: postgres
+* Password: postgres
+
+#### Jaeger UI
+
+Acesse `http://localhost:16686/` e busque pelo serviço `shortener`
+
+![Jaeger UI](./github_assets/jaeger.png)
 
 ## Swagger
 
@@ -55,3 +76,5 @@ Acesse o endereço do serviço com '/api' no final e tenha o painel do Swagger c
 ![Swagger](./github_assets/swagger.png)
 
 ## Melhorias
+
+* Utilização de variaveis de ambiente
