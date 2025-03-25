@@ -8,11 +8,11 @@ type ConstantsType = {
 export const Constants: ConstantsType = {
   database: {
     type: 'postgres',
-    host: 'localhost',
-    port: 5433,
-    username: 'shortener',
-    password: 'shortener.db',
-    database: 'shortener',
+    host: 'db',
+    port: 5432,
+    username: 'postgres',
+    password: 'postgres',
+    database: 'postgres',
   },
 
   jwt: {
