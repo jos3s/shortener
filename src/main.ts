@@ -9,10 +9,12 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('Shortener example')
-    .setDescription('The shortener API description')
+    .setDescription(
+      'Com o Shortener você vai poder criar versões encurtadas de qualquer link sem precisar de contas, mas se decidir criar poderá visualizar, editar e remover os seus links encurtados.',
+    )
     .setVersion('1.0')
-    .addTag('shortener')
     .build();
+
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
