@@ -49,7 +49,7 @@ npm run start:dev
 docker compose up --build
 ```
 
-### Pontos de Acesso
+### Pontos de acesso
 
 #### PgAdmin
 
@@ -75,6 +75,6 @@ Acesse o endereço do serviço com '/api' no final e tenha o painel do Swagger c
 
 ![Swagger](./github_assets/swagger.png)
 
-## Melhorias
+## Pontos de melhorias
 
 * Utilização de variaveis de ambiente
