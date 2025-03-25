@@ -62,7 +62,10 @@ export class UrlShortenerController {
   async findAll(@Req() req: Request) {
     const defaultUrl = `${req.protocol}://${req.get('Host')}`;
 
-    const urls = await this.urlShortenerService.findAllByUserId(1);
+    const urls = await this.urlShortenerService.findAllByUserId(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      req['user']?.sub,
+    );
 
     return urls?.map(
       (url) =>
