@@ -2,8 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './modules/app/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { otelSDK } from './infrastructure/telemetry/tracing';
 
 async function bootstrap() {
+  otelSDK.start();
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
@@ -19,7 +21,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
 
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(3000);
 }
 
 bootstrap();
