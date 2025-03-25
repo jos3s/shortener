@@ -7,7 +7,7 @@ export const dataSource = new DataSource({
   username: 'shortener',
   password: 'shortener.db',
   database: 'shortener',
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
   migrations: [],
   synchronize: true,
 });
